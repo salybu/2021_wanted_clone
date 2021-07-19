@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core";
 // import HeaderContext from "../contexts/HeaderContext";
+import Collapse from "@material-ui/core/Collapse";
 
 const theme = createTheme({
   breakpoints: {
@@ -67,6 +68,10 @@ export default function Header() {
     setState({ searchOpen: true });
   }
 
+  function hideSearch() {
+    setState({ searchOpen: false });
+  }
+
   return (
     <div className={classes.wrap}>
       <Container maxwidth={false} className={classes.root}>
@@ -80,9 +85,12 @@ export default function Header() {
           />
           <Aside showSearch={showSearch} />
         </Box>
-        {state.slideMenuOpen && <SlideMenu />}
+        <Collapse in={state.slideMenuOpen}>
+          {/* {state.slideMenuOpen && <SlideMenu state={state.slideMenuOpen} />} */}
+          <SlideMenu state={state.slideMenuOpen} />
+        </Collapse>
       </Container>
-      {state.searchOpen && <Search />}
+      {state.searchOpen && <Search hideSearch={hideSearch} />}
     </div>
   );
 }

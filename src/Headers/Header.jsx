@@ -1,4 +1,10 @@
 import React from "react";
+
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+import Collapse from "@material-ui/core/Collapse";
+
+import { makeStyles } from "@material-ui/core";
 import { useState } from "react";
 
 import Menu from "./Menu";
@@ -7,27 +13,8 @@ import Aside from "./Aside";
 import SlideMenu from "./SlideMenu";
 import Search from "./Search";
 
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { makeStyles } from "@material-ui/core";
-// import HeaderContext from "../contexts/HeaderContext";
-import Collapse from "@material-ui/core/Collapse";
-
-const theme = createTheme({
-  breakpoints: {
-    values: {
-      lg: 1060,
-    },
-  },
-});
-
 const useStyles = makeStyles((theme) => ({
   root: {
-    // flexGrow: 1,
     maxWidth: 1060,
     padding: 0,
   },
@@ -39,8 +26,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// export const HeaderContext = React.createContext({});
-
 export default function Header() {
   const classes = useStyles();
   const [state, setState] = useState({
@@ -48,14 +33,7 @@ export default function Header() {
     searchOpen: false,
   });
 
-  function slideMenu() {
-    setState((state) => {
-      return {
-        slideMenuOpen: !state.slideMenuOpen,
-      };
-    });
-  }
-
+  // 탐색 메뉴 클릭 시, 하위 메뉴 show/hide 함수
   function showSlideMenu() {
     setState({ slideMenuOpen: true });
   }
@@ -64,6 +42,7 @@ export default function Header() {
     setState({ slideMenuOpen: false });
   }
 
+  // Aside 컴포넌트의 검색 아이콘 버튼 클릭 시, 하위 메뉴 show/hide 함수
   function showSearch() {
     setState({ searchOpen: true });
   }
@@ -81,7 +60,6 @@ export default function Header() {
           style={{ height: 50 }}
         >
           <Logo />
-          {/* <Menu state={state} setState={slideMenu} /> */}
           <Menu
             state={state}
             showSlideMenu={showSlideMenu}
@@ -90,7 +68,6 @@ export default function Header() {
           <Aside showSearch={showSearch} />
         </Box>
         <Collapse in={state.slideMenuOpen}>
-          {/* {state.slideMenuOpen && <SlideMenu state={state.slideMenuOpen} />} */}
           <SlideMenu state={state.slideMenuOpen} />
         </Collapse>
       </Container>

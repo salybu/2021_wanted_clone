@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import { blueGrey } from "@material-ui/core/colors";
 import { CssBaseline } from "@material-ui/core";
 // import HeaderContext from "../contexts/HeaderContext";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // const theme = createTheme({
 //   props: {
@@ -21,6 +22,16 @@ import { CssBaseline } from "@material-ui/core";
 //     },
 //   },
 // });
+
+const menuList = [
+  "탐색",
+  "커리어 성장",
+  "직군별 연봉",
+  "이력서",
+  "매치업",
+  "프리랜서",
+  "Ai 합격예측",
+];
 
 const theme = createTheme({
   typography: {
@@ -39,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     // flexGrow: 1,
     padding: theme.spacing(0),
+    "& .MuiBox-root": {
+      boxSizing: "border-box",
+    },
   },
   item: {
     fontFamily: "Gothic A1",
@@ -46,6 +60,16 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     fontWeight: "bold",
     // color: theme.palette.text.secondary,
+    "&:hover": {
+      borderBottom: "3px solid #e1e2e3",
+      // boxShadow: "0 0 0 3px solid #e1e2e3 inset",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
+    // [theme.breakpoints.down("xs")]: {
+    //   display: "none",
+    // },
   },
   beta: {
     fontFamily: "Gothic A1 Light",
@@ -60,41 +84,37 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Menu(props) {
   const classes = useStyles();
+  const showAllMenu = useMediaQuery("(min-width:770px)");
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className={classes.root}>
         <Grid container>
-          <Grid item>
-            <Box
-              className={classes.item}
-              // onMouseOver={props.setState}
-              // onMouseOut={props.setState}
-              onMouseOver={props.showSlideMenu}
-            >
-              탐색
-            </Box>
-          </Grid>
-          {["커리어 성장", "직군별 연봉", "이력서", "매치업", "프리랜서"].map(
-            (itemName) => (
-              <Grid item>
-                <Box className={classes.item} onMouseOver={props.hideSlideMenu}>
-                  {itemName}
-                </Box>
-              </Grid>
-            )
-          )}
-          <Grid item>
-            <Box
-              className={classes.item}
-              onMouseOver={props.hideSlideMenu}
-              style={{ position: "relative" }}
-            >
-              Ai 합격예측
-              <div className={classes.beta}>Beta</div>
-            </Box>
-          </Grid>
+          {showAllMenu
+            ? // 반응형, 윈도우 가로길이가 690px 이상일 때
+              menuList.map((itemName, index) => (
+                <Grid item>
+                  <Box
+                    className={classes.item}
+                    onMouseOver={
+                      index == 0 ? props.showSlideMenu : props.hideSlideMenu
+                    }
+                    style={menuList[index + 1] ? {} : { position: "relative" }} // 마지막 메뉴 (Ai 합격예측)에 오른쪽 위에 Beta 태그 추가하기 위한 설정
+                  >
+                    {itemName}
+                    {!menuList[index + 1] && ( // 마지막 메뉴 (Ai 합격예측)에 오른쪽 위에 Beta 태그 추가
+                      <div className={classes.beta}>Beta</div>
+                    )}
+                  </Box>
+                </Grid>
+              ))
+            : // 윈도우 가로길이가 690px 이하일 때
+              ["홈", "탐색", "커리어 성장"].map((itemName) => (
+                <Grid item>
+                  <Box className={classes.item}>{itemName}</Box>
+                </Grid>
+              ))}
         </Grid>
       </div>
     </ThemeProvider>

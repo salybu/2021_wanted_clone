@@ -1,38 +1,35 @@
 import "../index.css";
 
 import React from "react";
-import { useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import { blueGrey } from "@material-ui/core/colors";
+import Link from "@material-ui/core/Link";
+
+import { makeStyles } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
-// import HeaderContext from "../contexts/HeaderContext";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-// const theme = createTheme({
-//   props: {
-//     // Style sheet name ⚛️
-//     MuiGrid: {
-//       // Name of the rule
-//       item: {
-//         padding: 0,
-//       },
-//     },
-//   },
-// });
-
+// 메뉴 리스트
 const menuList = [
-  "탐색",
-  "커리어 성장",
-  "직군별 연봉",
-  "이력서",
-  "매치업",
-  "프리랜서",
-  "Ai 합격예측",
+  { name: "탐색", link: "#menu1" },
+  { name: "커리어 성장", link: "#menu2" },
+  { name: "직군별 연봉", link: "#menu3" },
+  { name: "이력서", link: "#menu4" },
+  { name: "매치업", link: "#menu5" },
+  { name: "프리랜서", link: "#menu6" },
+  { name: "Ai 합격예측", link: "#menu7" },
 ];
 
+// 모바일 메뉴 리스트
+const menuListMobile = [
+  { name: "홈", link: "#menu0" },
+  { name: "탐색", link: "#menu1" },
+  { name: "커리어 성장", link: "#menu2" },
+];
+
+// 폰트 적용
 const theme = createTheme({
   typography: {
     fontFamily: ["Gothic A1", "Gothic A1 Light", "sans-serif"].join(","),
@@ -48,7 +45,6 @@ const theme = createTheme({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // flexGrow: 1,
     padding: theme.spacing(0),
     "& .MuiBox-root": {
       boxSizing: "border-box",
@@ -59,18 +55,14 @@ const useStyles = makeStyles((theme) => ({
     padding: 15,
     textAlign: "center",
     fontWeight: "bold",
-    // color: theme.palette.text.secondary,
     "&:hover": {
       borderBottom: "3px solid #e1e2e3",
-      // boxShadow: "0 0 0 3px solid #e1e2e3 inset",
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 13,
     },
-    // [theme.breakpoints.down("xs")]: {
-    //   display: "none",
-    // },
   },
+  // Ai 합격예측 메뉴 우측 상단에 "Beta" 부분
   beta: {
     fontFamily: "Gothic A1 Light",
     fontWeight: "100",
@@ -92,27 +84,39 @@ export default function Menu(props) {
       <div className={classes.root}>
         <Grid container>
           {showAllMenu
-            ? // 반응형, 윈도우 가로길이가 690px 이상일 때
-              menuList.map((itemName, index) => (
+            ? // width: 690px 이상일 때
+              menuList.map((item, index) => (
                 <Grid item>
-                  <Box
-                    className={classes.item}
-                    onMouseOver={
-                      index == 0 ? props.showSlideMenu : props.hideSlideMenu
-                    }
-                    style={menuList[index + 1] ? {} : { position: "relative" }} // 마지막 메뉴 (Ai 합격예측)에 오른쪽 위에 Beta 태그 추가하기 위한 설정
+                  <Link
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    href={item.link}
                   >
-                    {itemName}
-                    {!menuList[index + 1] && ( // 마지막 메뉴 (Ai 합격예측)에 오른쪽 위에 Beta 태그 추가
-                      <div className={classes.beta}>Beta</div>
-                    )}
-                  </Box>
+                    <Box
+                      className={classes.item}
+                      onMouseOver={
+                        index == 0 ? props.showSlideMenu : props.hideSlideMenu
+                      }
+                      style={
+                        menuList[index + 1] ? {} : { position: "relative" }
+                      } // 마지막 메뉴 (Ai 합격예측) 우측상단 에 "Beta" 추가하기 위한 설정
+                    >
+                      {item.name}
+                      {!menuList[index + 1] && ( // 마지막 메뉴 (Ai 합격예측) 우측상단 에 "Beta" 추가
+                        <div className={classes.beta}>Beta</div>
+                      )}
+                    </Box>
+                  </Link>
                 </Grid>
               ))
-            : // 윈도우 가로길이가 690px 이하일 때
-              ["홈", "탐색", "커리어 성장"].map((itemName) => (
+            : // width: 690px 이하일 때
+              menuListMobile.map((item) => (
                 <Grid item>
-                  <Box className={classes.item}>{itemName}</Box>
+                  <Link
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    href={item.link}
+                  >
+                    <Box className={classes.item}>{item.name}</Box>
+                  </Link>
                 </Grid>
               ))}
         </Grid>

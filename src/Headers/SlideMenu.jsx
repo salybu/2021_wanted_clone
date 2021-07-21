@@ -3,13 +3,13 @@ import "../index.css";
 import React from "react";
 
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core";
+
 import NavigateNextRoundedIcon from "@material-ui/icons/NavigateNextRounded";
 
+// 메뉴 ( "탐색"메뉴 하위메뉴)
 const menu = [
   {
     itemMain: "영업",
@@ -73,6 +73,7 @@ const menu = [
   },
 ];
 
+// 폰트 적용
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -98,7 +99,6 @@ const theme = createTheme({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // display: "flex",
     flexGrow: 1,
     height: 380,
   },
@@ -110,7 +110,6 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     fontSize: 17,
     margin: 0,
-    // height: 20,
     padding: "0 20px 15px 0",
   },
   itemSub: {
@@ -161,6 +160,7 @@ export default function SlideMenu() {
               </div>
             </Grid>
           ))}
+          {/* 가장 우측 대 메뉴 */}
           <Grid item xs={2} lg={2}>
             <div className={classes.itemWrap}>
               {[

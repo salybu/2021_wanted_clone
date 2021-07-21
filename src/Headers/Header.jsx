@@ -75,7 +75,11 @@ export default function Header() {
   return (
     <div className={classes.wrap}>
       <Container maxwidth={false} className={classes.root}>
-        <Box display="flex" justifyContent="space-between">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          style={{ height: 50 }}
+        >
           <Logo />
           {/* <Menu state={state} setState={slideMenu} /> */}
           <Menu

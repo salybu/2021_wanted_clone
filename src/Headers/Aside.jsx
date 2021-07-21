@@ -11,6 +11,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import SearchRoundedIcon from "@material-ui/icons/SearchRounded";
 import NotificationsNoneRoundedIcon from "@material-ui/icons/NotificationsNoneRounded";
+import SubjectRoundedIcon from "@material-ui/icons/SubjectRounded";
 import ProfileImg from "../avatar.jpg";
 import Badge from "@material-ui/core/Badge";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import Divider from "@material-ui/core/Divider";
 import ListItemText from "@material-ui/core/ListItemText";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const alarmList = [
   {
@@ -49,6 +51,17 @@ const alarmList = [
   },
 ];
 
+const profileMenuList = [
+  "MY 원티드",
+  "프로필",
+  "지원 현황",
+  "제안받기 현황",
+  "좋아요",
+  "북마크",
+  "추천",
+  "포인트",
+];
+
 const ProfileButton = withStyles({
   root: {
     maxWidth: 32,
@@ -59,6 +72,28 @@ const ProfileButton = withStyles({
   },
 })(Button);
 
+const NewBadge = withStyles((theme) => ({
+  badge: {
+    padding: "0 4px",
+    backgroundColor: "#3366FF",
+    color: "#f8f8fa",
+    fontSize: 7,
+    fontWeight: 600,
+    top: 3,
+    right: 2,
+    height: 15,
+    minWidth: 11,
+  },
+}))(Badge);
+
+const MyBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: "#3366FF",
+    height: 5,
+    minWidth: 5,
+  },
+}))(Badge);
+
 const CorpButton = withStyles({
   root: {
     width: 90,
@@ -67,21 +102,15 @@ const CorpButton = withStyles({
     borderRadius: 20,
     fontSize: 13,
     float: "right",
-    "&::before": {
-      // display: "block",
-      content: "",
-      width: 4,
-      height: 10,
-      backgroundColor: "#e1e2e3",
-      margin: "auto 10px",
-    },
   },
 })(Button);
 
 const AlarmMenu = withStyles({
   paper: {
-    border: "1px solid #cdcdcd",
+    // border: "1px solid #cdcdcd",
     borderRadius: 15,
+    boxShadow:
+      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
   },
 })((props) => (
   <Menu
@@ -99,6 +128,65 @@ const AlarmMenu = withStyles({
   />
 ));
 
+const ProfileMenu = withStyles({
+  paper: {
+    width: "192px",
+    maxHeight: "415px",
+    // border: "1px solid #cdcdcd",
+    borderRadius: 15,
+    boxShadow:
+      "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+    "& ul.MuiList-root": {
+      padding: "14px 0 0 0",
+    },
+    "& li.MuiDivider-root": {
+      height: 0.3,
+      margin: "9px 7px",
+    },
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
+
+const ProfileMenuItem = withStyles(() => ({
+  root: {
+    justifyContent: "center",
+    fontSize: 14,
+    color: "#333333",
+    padding: 8,
+  },
+}))(MenuItem);
+
+const theme = createTheme({
+  props: {
+    MuiButtonBase: {
+      disableRipple: true,
+      disableTouchRipple: true,
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 690,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+});
+
 const useStyles = makeStyles((theme) => ({
   iconButton: {
     // disableFocusRipple: true,
@@ -106,8 +194,25 @@ const useStyles = makeStyles((theme) => ({
     // disabled: true,
     padding: 5,
   },
+  iconButtonMobile: {
+    minWidth: 20,
+    height: 20,
+    padding: "0 5px",
+  },
   corpService: {
+    display: "flex",
     width: 127,
+    justifyContent: "space-between",
+    "&::before": {
+      // display: "block",
+      content: "''",
+      minWidth: 1,
+      maxWidth: 1,
+      minHeight: 10,
+      maxHeight: 10,
+      backgroundColor: "#e1e2e3",
+      margin: "10px 10px 10px 20px",
+    },
   },
   alarmMenuWrap: {
     margin: 0,
@@ -141,83 +246,165 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const theme = createTheme({
-  props: {
-    MuiButtonBase: {
-      disableRipple: true,
-      disableTouchRipple: true,
-    },
-  },
-});
-
 export default function Aside(props) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
+  const showAllMenu = useMediaQuery("(min-width:770px)");
+
+  const [state, setState] = useState({
+    alarmAnchorEl: null,
+    profileAnchorEl: null,
+  });
+  const alarmOpen = (event) => {
+    setState({ alarmAnchorEl: event.currentTarget });
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const alarmClose = () => {
+    setState({ alarmAnchorEl: null });
+  };
+
+  const profileOpen = (event) => {
+    setState({ profileAnchorEl: event.currentTarget });
+  };
+
+  const profileClose = () => {
+    setState({ profileAnchorEl: null });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <div style={{ padding: "9px 0px" }}>
-        <Box display="flex" style={{ width: 260 }}>
-          <IconButton className={classes.iconButton} onClick={props.showSearch}>
-            <SearchRoundedIcon />
-          </IconButton>
-          <IconButton className={classes.iconButton} onClick={handleClick}>
-            <NotificationsNoneRoundedIcon />
-          </IconButton>
-          <AlarmMenu
-            className={classes.menu}
-            id="customized-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
+        {console.log(theme.breakpoints)}
+        {showAllMenu ? (
+          <Box display="flex" style={{ width: 260 }}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={props.showSearch}
+            >
+              <SearchRoundedIcon />
+            </IconButton>
+            <IconButton className={classes.iconButton} onClick={alarmOpen}>
+              <NotificationsNoneRoundedIcon />
+            </IconButton>
+            <AlarmMenu
+              id="alarm-menu"
+              // anchorEl={anchorEl}
+              anchorEl={state.alarmAnchorEl}
+              keepMounted
+              // open={Boolean(anchorEl)}
+              open={Boolean(state.alarmAnchorEl)}
+              onClose={alarmClose}
+            >
+              <List className={classes.alarmMenuWrap}>
+                {alarmList.map((alarm, index) => (
+                  <React.Fragment>
+                    <ListItem alignItems="flex-start">
+                      <Button>
+                        <ListItemText
+                          className={classes.alarmMenuText}
+                          primary={
+                            <React.Fragment>
+                              <div>{alarm.category}</div>
+                              <div>{alarm.contents}</div>
+                              <div>{alarm.date}</div>
+                            </React.Fragment>
+                          }
+                        />
+                      </Button>
+                    </ListItem>
+                    {alarmList[index + 1] && ( // 마지막 구분선 생략
+                      <Divider variant="inset" component="li" />
+                    )}
+                  </React.Fragment>
+                ))}
+              </List>
+            </AlarmMenu>
+            <div style={{ width: 35, marginLeft: 8 }}>
+              <ProfileButton onClick={profileOpen}>
+                <NewBadge badgeContent="N">
+                  <Avatar
+                    src={ProfileImg}
+                    style={{ borderRadius: 20, width: 28, height: 28 }}
+                  />
+                </NewBadge>
+              </ProfileButton>
+              <ProfileMenu
+                id="profile-menu"
+                anchorEl={state.profileAnchorEl}
+                keepMounted
+                open={Boolean(state.profileAnchorEl)}
+                onClose={profileClose}
+              >
+                {profileMenuList.map((profileMenu, index) => (
+                  <React.Fragment>
+                    {index == 0 ? (
+                      <ProfileMenuItem>
+                        <MyBadge color="secondary" variant="dot">
+                          {profileMenu}
+                        </MyBadge>
+                      </ProfileMenuItem>
+                    ) : (
+                      <ProfileMenuItem>{profileMenu}</ProfileMenuItem>
+                    )}
+                    {(index == 1 || index == 5) && (
+                      <Divider variant="inset" component="li" />
+                    )}
+                  </React.Fragment>
+                ))}
+                <ProfileMenuItem
+                  style={{
+                    height: 50,
+                    backgroundColor: "#f7f7f7",
+                    marginTop: 9,
+                  }}
+                >
+                  로그아웃
+                </ProfileMenuItem>
+              </ProfileMenu>
+            </div>
+            <div className={classes.corpService}>
+              <CorpButton>기업 서비스</CorpButton>
+            </div>
+          </Box>
+        ) : (
+          <Box
+            display="flex"
+            style={{
+              width: 124,
+              height: 30,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <List className={classes.alarmMenuWrap}>
-              {alarmList.map((alarm, index) => (
-                <React.Fragment>
-                  <ListItem alignItems="flex-start">
-                    <Button>
-                      <ListItemText
-                        className={classes.alarmMenuText}
-                        primary={
-                          <React.Fragment>
-                            <div>{alarm.category}</div>
-                            <div>{alarm.contents}</div>
-                            <div>{alarm.date}</div>
-                          </React.Fragment>
-                        }
-                      />
-                    </Button>
-                  </ListItem>
-                  {alarmList[index + 1] && (
-                    <Divider variant="inset" component="li" />
-                  )}
-                </React.Fragment>
-              ))}
-            </List>
-          </AlarmMenu>
-          <div style={{ width: 35, marginLeft: 8 }}>
-            <ProfileButton>
-              <Badge badgeContent={4} color="primary">
-                <Avatar
-                  src={ProfileImg}
-                  style={{ borderRadius: 20, width: 28, height: 28 }}
-                />
-              </Badge>
-            </ProfileButton>
-          </div>
-          <div className={classes.corpService}>
-            <CorpButton>기업 서비스</CorpButton>
-          </div>
-        </Box>
+            <IconButton
+              className={classes.iconButtonMobile}
+              onClick={props.showSearch}
+            >
+              <SearchRoundedIcon />
+            </IconButton>
+            <IconButton
+              className={classes.iconButtonMobile}
+              onClick={alarmOpen}
+            >
+              <NotificationsNoneRoundedIcon />
+            </IconButton>
+            <IconButton
+              className={classes.iconButtonMobile}
+              style={{ marginRight: 10 }}
+            >
+              <SubjectRoundedIcon />
+            </IconButton>
+          </Box>
+        )}
       </div>
     </ThemeProvider>
   );
